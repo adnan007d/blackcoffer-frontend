@@ -1,40 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, Select } from "antd";
-import BarPlot from "../charts/BarPlot";
 import {
   API_URL,
+  fetchPestle,
   fetchSectors,
-  fetchTopics,
   toSearchParams,
 } from "../utils/util";
+import PieChart from "../charts/PieChart";
 
 type Data = {
-  topic: string;
+  sector: string;
   intensity: number;
 };
 
 type DataQuery = {
-  topics?: string[];
+  pestles?: string[];
   sectors?: string[];
 };
 
 async function fetchData(dataQuery: DataQuery): Promise<Data[]> {
   return fetch(
-    API_URL + "/api/v1/intensity/topics?" + toSearchParams(dataQuery).toString()
+    API_URL +
+      "/api/v1/sectors/intensity?" +
+      toSearchParams(dataQuery).toString()
   ).then((res) => res.json());
 }
 
-const IntensityxTopics = () => {
+const SectorsxIntensity = () => {
   const [dataQuery, setDataQuery] = useState<DataQuery>({});
   const query = useQuery({
-    queryKey: ["intensityXtopics", dataQuery],
+    queryKey: ["sectorXintensity", dataQuery],
     queryFn: () => fetchData(dataQuery),
   });
 
-  const queryTopics = useQuery({
-    queryKey: ["topics"],
-    queryFn: fetchTopics,
+  const queryPestle = useQuery({
+    queryKey: ["pestles"],
+    queryFn: fetchPestle,
   });
 
   const querySectors = useQuery({
@@ -42,11 +44,11 @@ const IntensityxTopics = () => {
     queryFn: fetchSectors,
   });
 
-  const handleTopicsChange = (value: string[]) => {
+  const handlePestleChange = (value: string[]) => {
     if (value.length !== 0) {
-      setDataQuery({ ...dataQuery, topics: value });
+      setDataQuery({ ...dataQuery, sectors: value });
     } else {
-      setDataQuery({ ...dataQuery, topics: undefined });
+      setDataQuery({ ...dataQuery, sectors: undefined });
     }
   };
 
@@ -60,17 +62,19 @@ const IntensityxTopics = () => {
 
   const data = query.data ?? [];
 
-  const labels = data.map((d) => d.topic);
-  const values = data.map((d) => d.intensity);
+  const labels = data.map((d) => d.sector);
+  const colours = data.map(
+    () => `#${Math.floor(Math.random() * 16777215).toString(16)}`
+  );
 
   const chartData = {
-    labels: labels,
+    labels,
     datasets: [
       {
         label: "Intensity",
-        data: values,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        data: data.map((d) => d.intensity),
+        backgroundColor: colours,
+        borderColor: colours,
         borderWidth: 1,
       },
     ],
@@ -87,12 +91,12 @@ const IntensityxTopics = () => {
           mode="multiple"
           allowClear={true}
           style={{ width: "100%" }}
-          placeholder="Please select Topics"
-          onChange={handleTopicsChange}
-          loading={queryTopics.isFetching}
-          options={queryTopics.data?.map((topic: string) => ({
-            label: topic,
-            value: topic,
+          placeholder="Please select Pestle"
+          onChange={handlePestleChange}
+          loading={queryPestle.isFetching}
+          options={queryPestle.data?.map((sector: string) => ({
+            label: sector,
+            value: sector,
           }))}
           virtual={true}
         />
@@ -112,7 +116,7 @@ const IntensityxTopics = () => {
         />
       </Card>
       <div className="w-full lg:col-span-3 lg:col-start-1 lg:row-start-1 aspect-video">
-        <BarPlot
+        <PieChart
           data={chartData}
           options={{
             responsive: true,
@@ -124,4 +128,4 @@ const IntensityxTopics = () => {
   );
 };
 
-export default IntensityxTopics;
+export default SectorsxIntensity;

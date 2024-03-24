@@ -14,3 +14,15 @@ export function toSearchParams(
   }
   return searchParams;
 }
+
+export async function fetchPestle(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/pestles").then((res) => res.json());
+}
+
+export async function fetchSectors(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/sectors").then((res) => res.json());
+}
+export async function fetchTopics(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/topics").then((res) => res.json());
+}
+

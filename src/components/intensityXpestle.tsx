@@ -1,7 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card, Select } from "antd";
-import { API_URL, toSearchParams } from "../utils/util";
+import {
+  API_URL,
+  fetchPestle,
+  fetchSectors,
+  toSearchParams,
+} from "../utils/util";
 import RadarPlot from "../charts/RadarPlot";
 
 type Data = {
@@ -19,15 +24,6 @@ async function fetchData(dataQuery: DataQuery): Promise<Data[]> {
     API_URL + "/api/v1/intensity/pestle?" + toSearchParams(dataQuery).toString()
   ).then((res) => res.json());
 }
-
-async function fetchPestle(): Promise<string[]> {
-  return fetch(API_URL + "/api/v1/pestles").then((res) => res.json());
-}
-
-async function fetchSectors(): Promise<string[]> {
-  return fetch(API_URL + "/api/v1/sectors").then((res) => res.json());
-}
-
 const IntensityxPestle = () => {
   const [dataQuery, setDataQuery] = useState<DataQuery>({});
   const query = useQuery({
@@ -61,17 +57,10 @@ const IntensityxPestle = () => {
     }
   };
 
-  const [data, setData] = useState<Data[]>([]);
-
-  useEffect(() => {
-    if (query.data) {
-      setData(query.data);
-    }
-  }, [query.data]);
+  const data = query.data ?? [];
 
   const labels = data.map((d) => d.pestle);
   const values = data.map((d) => d.intensity);
-  console.log(labels);
 
   const chartData = {
     labels: labels,
@@ -89,7 +78,7 @@ const IntensityxPestle = () => {
   return (
     <div className="grid lg:grid-cols-4 place-items-center w-full">
       <Card
-        className="w-full lg:col-start-4"
+        className="w-full lg:col-start-4 h-full"
         classNames={{ body: "w-full gap-20 space-y-5" }}
         title="Filters"
       >
@@ -127,18 +116,6 @@ const IntensityxPestle = () => {
           options={{
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-              y: {},
-            },
-            plugins: {
-              legend: {
-                position: "top" as const,
-              },
-              title: {
-                display: true,
-                text: "Pestle x Intensity",
-              },
-            },
           }}
         />
       </div>

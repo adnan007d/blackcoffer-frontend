@@ -1,17 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, Select } from "antd";
-import BarPlot from "../charts/BarPlot";
 import {
   API_URL,
   fetchSectors,
   fetchTopics,
   toSearchParams,
 } from "../utils/util";
+import BarPlot from "../charts/BarPlot";
 
 type Data = {
-  topic: string;
-  intensity: number;
+  sector: string;
+  avgIntensity: number;
+  avgRelevance: number;
+  avgLikelihood: number;
 };
 
 type DataQuery = {
@@ -21,14 +23,16 @@ type DataQuery = {
 
 async function fetchData(dataQuery: DataQuery): Promise<Data[]> {
   return fetch(
-    API_URL + "/api/v1/intensity/topics?" + toSearchParams(dataQuery).toString()
+    API_URL +
+      "/api/v1/sectors/all?" +
+      toSearchParams(dataQuery).toString()
   ).then((res) => res.json());
 }
 
-const IntensityxTopics = () => {
+const SectorsXall = () => {
   const [dataQuery, setDataQuery] = useState<DataQuery>({});
   const query = useQuery({
-    queryKey: ["intensityXtopics", dataQuery],
+    queryKey: ["sectorsXall", dataQuery],
     queryFn: () => fetchData(dataQuery),
   });
 
@@ -60,18 +64,28 @@ const IntensityxTopics = () => {
 
   const data = query.data ?? [];
 
-  const labels = data.map((d) => d.topic);
-  const values = data.map((d) => d.intensity);
+  const labels = data.map((_, i) => data[i].sector);
+  const avgIntensity = data.map((_, i) => data[i].avgIntensity);
+  const avgRelevance = data.map((_, i) => data[i].avgRelevance);
+  const avgLikelihood = data.map((_, i) => data[i].avgLikelihood);
 
   const chartData = {
     labels: labels,
     datasets: [
       {
         label: "Intensity",
-        data: values,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 1,
+        data: avgIntensity,
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+      },
+      {
+        label: "Relevance",
+        data: avgRelevance,
+        backgroundColor: "rgba(54, 162, 235, 0.8)",
+      },
+      {
+        label: "Likelihood",
+        data: avgLikelihood,
+        backgroundColor: "rgba(255, 206, 86, 0.8)",
       },
     ],
   };
@@ -124,4 +138,4 @@ const IntensityxTopics = () => {
   );
 };
 
-export default IntensityxTopics;
+export default SectorsXall;
