@@ -4,6 +4,7 @@ import IntensityxPestle from "../../components/intensityXpestle";
 import SectorsXall from "../../components/sectorsXall";
 import SectorsxIntensity from "../../components/sectorsXintensity";
 import { Card } from "antd";
+import LikelihoodxTopics from "../../components/likelihoodXtopics";
 
 export const Route = createFileRoute("/_dashboard/")({
   component: Index,
@@ -12,8 +13,8 @@ export const Route = createFileRoute("/_dashboard/")({
 function Index() {
   return (
     <div className="p-2 space-y-20 lg:w-10/12 mx-auto">
-      <Card title="Intensity X Topics">
-        <IntensityxTopics />
+      <Card title="Likehood X Topics">
+        <LikelihoodxTopics />
       </Card>
 
       <Card title="Intensity X Pestle">
@@ -27,6 +28,11 @@ function Index() {
       <Card title="Sectors X Intensity">
         <SectorsxIntensity />
       </Card>
+
+      <Card title="Intensity X Topics">
+        <IntensityxTopics />
+      </Card>
+
       <Outlet />
     </div>
   );

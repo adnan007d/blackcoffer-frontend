@@ -16,7 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as DashboardIndexImport } from './routes/_dashboard/index'
-import { Route as DashboardHellImport } from './routes/_dashboard/hell'
 
 // Create Virtual Routes
 
@@ -44,11 +43,6 @@ const DashboardIndexRoute = DashboardIndexImport.update({
   getParentRoute: () => DashboardRoute,
 } as any)
 
-const DashboardHellRoute = DashboardHellImport.update({
-  path: '/hell',
-  getParentRoute: () => DashboardRoute,
-} as any)
-
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -65,10 +59,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_dashboard/hell': {
-      preLoaderRoute: typeof DashboardHellImport
-      parentRoute: typeof DashboardImport
-    }
     '/_dashboard/': {
       preLoaderRoute: typeof DashboardIndexImport
       parentRoute: typeof DashboardImport
@@ -79,7 +69,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  DashboardRoute.addChildren([DashboardHellRoute, DashboardIndexRoute]),
+  DashboardRoute.addChildren([DashboardIndexRoute]),
   LoginRoute,
   AboutLazyRoute,
 ])

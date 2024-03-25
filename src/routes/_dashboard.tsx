@@ -27,7 +27,6 @@ import MenuFoldOutlined from "@ant-design/icons/MenuFoldOutlined";
 import MenuUnfoldOutlined from "@ant-design/icons/MenuUnfoldOutlined";
 import UserOutlined from "@ant-design/icons/UserOutlined";
 import HomeOutlined from "@ant-design/icons/HomeOutlined";
-import FileImageOutlined from "@ant-design/icons/FileImageOutlined";
 import { useAuth } from "../auth";
 import { routeTree } from "../routeTree.gen";
 import { flushSync } from "react-dom";
@@ -38,11 +37,6 @@ const paths: { path: RoutePath; icon: React.ReactNode; title: string }[] = [
     path: "/",
     icon: <HomeOutlined />,
     title: "Home",
-  },
-  {
-    path: "/hell",
-    icon: <FileImageOutlined />,
-    title: "Hell",
   },
 ];
 

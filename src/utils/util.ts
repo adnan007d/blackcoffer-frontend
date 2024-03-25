@@ -26,3 +26,18 @@ export async function fetchTopics(): Promise<string[]> {
   return fetch(API_URL + "/api/v1/topics").then((res) => res.json());
 }
 
+export async function fetchInsights(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/insights").then((res) => res.json());
+}
+
+export async function fetchRegions(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/regions").then((res) => res.json());
+}
+
+export async function fetchSources(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/sources").then((res) => res.json());
+}
+
+export async function fetchCountries(): Promise<string[]> {
+  return fetch(API_URL + "/api/v1/countries").then((res) => res.json());
+}
